@@ -36,6 +36,18 @@ def _construct_address(addr: str) -> IPAddress:
         # address
         return IPv6Address(addr)
 
+def _find_library():
+    import os
+    import sys
+
+    local_dir = os.path.join(sys.prefix, 'lib')
+    try:
+        lib_path = os.path.join(local_dir, 'libccs-client.so')
+        assert os.path.exists(lib_path)
+        return lib_path
+    except:
+        raise
+
 @dataclass
 class ConnectionInfo:
     host_ip: IPAddress
@@ -62,7 +74,7 @@ class Server:
         if isinstance(address, str):
             address = _construct_address(address)
 
-        self._lib = CDLL('/home/zane/charm/netlrts-linux-x86_64/lib_so/libccs-client.so')
+        self._lib = CDLL(_find_library())
         self.is_timeout_set = False
         self.timeout_period = DEFAULT_TIMEOUT_PERIOD
         self.conn_info = ConnectionInfo(address, port, secret_key)

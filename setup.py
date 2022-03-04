@@ -1,4 +1,16 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+import os
+from os.path import exists
+from shutil import copyfile
+import distutils
+from distutils import log
+
+try:
+    assert os.path.exists('charm_src/charm/lib_so/libccs-client.so')
+except AssertionError:
+    print("ERROR: Library file 'charm_src/charm/lib_so/libccs-client.so' not found!")
+    raise
 
 setup(
     name="PyCCS",
@@ -22,5 +34,6 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
-    ]
+    ],
+    data_files=[('lib', ['charm_src/charm/lib_so/libccs-client.so'])]
 )
