@@ -5,6 +5,7 @@ setup(
     version="0.01",
     packages = ['pyccs'],
     install_requires = [""],
+    extras_require={'tests': ['pytest']},
     author = "Zane Fink",
     author_email = "zanef2@illinois.edu",
     description = "Python CCS Interface",
@@ -12,11 +13,6 @@ setup(
     license = "",
     keywords = "pytest testing",
     url = "",
-#    entry_points = {
-#        'pytest11': [
-#            'pytest_charm = pytest_charm',
-#        ]
-#    },
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
