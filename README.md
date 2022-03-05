@@ -4,7 +4,7 @@
 Current best usage examples can be found in [examples](examples/simple_client.py) and the [tests](tests/test_server.py).
 
 ### Build
-Similar to [Charm4Py](https://github.com/uiuc-ppl/charm4py), this repository requires that the Charm++ repository can be found in ~charm_src/charm~. The following commands will clone this repository and make Charm++ available for use:
+Similar to [Charm4Py](https://github.com/uiuc-ppl/charm4py), this repository requires that the Charm++ repository can be found in ```charm_src/charm```. The following commands will clone this repository and make Charm++ available for use:
 ```bash
 $ git clone https://github.com/UIUC-PPL/pyccs
 $ cd pyccs
