@@ -22,7 +22,7 @@ def main():
     for pe in range(num_pes):
         server.send_request(b'ping', pe, message)
         response = server.receive_response(reply_len)
-        print(response)
+        print(str(response, 'utf-8'))
 
 
 if __name__ == '__main__':
