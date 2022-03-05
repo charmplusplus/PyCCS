@@ -36,7 +36,7 @@ def _construct_address(addr: str) -> IPAddress:
         # address
         return IPv6Address(addr)
 
-def _find_library():
+def _find_library() -> str:
     import os
     import sys
 
@@ -81,10 +81,10 @@ class Server:
         self.print_debug = False
         self._server = None
 
-    def _server_create(self):
+    def _server_create(self) -> CcsServer:
         return CcsServer()
 
-    def connect(self, timeout: int = DEFAULT_TIMEOUT_PERIOD):
+    def connect(self, timeout: int = DEFAULT_TIMEOUT_PERIOD) -> int:
         if self._server is None:
             self._server = self._server_create()
         logging.getLogger().debug('Attempting a connection...')
@@ -98,7 +98,7 @@ class Server:
                                                  )
         return retval
 
-    def send_request(self, handler_id: bytes, pe: int, msg: bytes):
+    def send_request(self, handler_id: bytes, pe: int, msg: bytes) -> int:
         encoded_id = handler_id
         assert self._server is not None
         return self._lib.CcsSendRequest(pointer(self._server),
@@ -108,7 +108,7 @@ class Server:
                                         msg
                                         )
 
-    def send_broadcast_request(self, handler_id: bytes, msg: bytes):
+    def send_broadcast_request(self, handler_id: bytes, msg: bytes) -> int:
         assert self._server is not None
         return self._lib.CcsSendBroadcastRequest(pointer(self._server),
                                                  handler_id,
@@ -116,7 +116,7 @@ class Server:
                                                  msg
                                                  )
 
-    def receive_response(self, max_size: int, timeout: int = DEFAULT_TIMEOUT_PERIOD):
+    def receive_response(self, max_size: int, timeout: int = DEFAULT_TIMEOUT_PERIOD) -> bytearray:
         buf = bytearray(max_size)
         char_array = c_char * max_size
         self._lib.CcsRecvResponse(pointer(self._server),
@@ -126,11 +126,11 @@ class Server:
                                   )
         return buf
 
-    def num_nodes(self):
+    def num_nodes(self) -> int:
         return self._lib.CcsNumNodes(pointer(self._server))
 
-    def num_pes(self):
+    def num_pes(self) -> int:
         return self._lib.CcsNumPes(pointer(self._server))
 
-    def node_size(self, node: int):
+    def node_size(self, node: int) -> int:
         return self._lib.CcsNodeSize(pointer(self._server), node)
