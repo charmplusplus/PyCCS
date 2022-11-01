@@ -24,7 +24,7 @@ class CcsServer(Structure):
                 ("rand", CCS_RAND_state),
                 ("numNodes", c_int),
                 ("numPes", c_int),
-                ("numProcs", c_int),
+                ("numProcs", POINTER(c_int)),
                 # NOTE: SOCKET is defined as int
                 ("replyFd", c_int)]
 
