@@ -1,6 +1,6 @@
 from typing import Union, Optional
 import logging
-from ipaddress import IPv4Address, IPv6Address
+from ipaddress import IPv4Address, IPv6Address, AddressValueError
 from dataclasses import dataclass, field
 from ctypes import Structure, c_int, POINTER, c_char, c_uint, c_byte, CDLL, pointer
 from .auth import CcsSec_secretKey, CCS_RAND_state
