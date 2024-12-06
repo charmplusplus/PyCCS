@@ -39,10 +39,15 @@ def _construct_address(addr: str) -> IPAddress:
 def _find_library() -> str:
     import os
     import sys
+    import platform
 
     local_dir = os.path.join(sys.prefix, 'lib')
+    this_system = platform.system().lower()
     try:
-        lib_path = os.path.join(local_dir, 'libccs-client.so')
+        if this_system == "darwin":
+            lib_path = os.path.join(local_dir, 'libccs-client.dylib')
+        else:
+            lib_path = os.path.join(local_dir, 'libccs-client.so')
         assert os.path.exists(lib_path)
         return lib_path
     except:
