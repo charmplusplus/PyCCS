@@ -1,5 +1,10 @@
 from pyccs import Server
 import pytest
+from unittest.mock import patch, Mock
+import ctypes 
+
+
+#make sure server is running before running these tests 
 
 @pytest.fixture
 def connected_server():
@@ -57,3 +62,17 @@ def test_metadata(connected_server):
   assert n_pes == 2
   assert n_nodes == 2
   assert node_size == 1
+
+def test_receive_response_msg(connected_server):
+  send_hdlr = "ping\0".encode('ascii')
+  send_msg = "steven\0".encode('ascii')
+
+  retval = connected_server.send_request(send_hdlr, 0, send_msg)
+  assert retval == 0
+  responsemsg = connected_server.receive_response_message()
+  assert responsemsg == b'hello steven from processor 0\n\x00'
+
+  retval = connected_server.send_request(send_hdlr, 1, send_msg)
+  assert retval == 0 
+  responsemsg = connected_server.receive_response_message()
+  assert responsemsg == b'hello steven from processor 1\n\x00'
