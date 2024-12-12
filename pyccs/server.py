@@ -2,7 +2,7 @@ from typing import Union, Optional
 import logging
 from ipaddress import IPv4Address, IPv6Address, AddressValueError
 from dataclasses import dataclass, field
-from ctypes import Structure, c_int, POINTER, c_char, c_uint, c_byte, CDLL, pointer
+from ctypes import Structure, c_int, POINTER, c_char, c_uint, c_byte, CDLL, pointer, cast, c_void_p
 from .auth import CcsSec_secretKey, CCS_RAND_state
 IPAddress = Union[IPv4Address, IPv6Address]
 
@@ -86,6 +86,12 @@ class Server:
         self.print_debug = False
         self._server = None
 
+        #load c standard library
+        self._libc = CDLL(None) #this is only the case for macos and linux, windows might need to be different
+
+        self._libc.free.argtypes = [c_void_p]
+        self._libc.free.restype = None 
+
     def _server_create(self) -> CcsServer:
         return CcsServer()
 
@@ -130,6 +136,33 @@ class Server:
                                   timeout
                                   )
         return buf
+   
+    #this function is utilized when you might not have a specific size in mind for the message.
+    #when requesting a table for example, you might not know the size of the table in advance.
+    def receive_response_message(self, timeout: int = DEFAULT_TIMEOUT_PERIOD) -> bytearray:
+        #creates a pointer to a c_char and initalizes it to point to NULL
+        buf = POINTER(c_char)()
+        retSize = c_uint()
+        self._lib.CcsRecvResponseMsg(pointer(self._server), 
+                                     pointer(retSize), 
+                                     pointer(buf), 
+                                     timeout
+                                     )
+        
+        if not buf or retSize.value == 0:
+            raise ValueError("Did not receive message/message size is 0")
+        
+        buf_array_type = c_char * retSize.value
+        buf_array = cast(buf, POINTER(buf_array_type)).contents
+
+        # convert back to buffer array 
+        res = bytearray(buf_array[:retSize.value])
+
+        # Free buffer that CcsRecvResponseMsg allocated
+        self._libc.free(buf)
+
+        return res
+
 
     def num_nodes(self) -> int:
         return self._lib.CcsNumNodes(pointer(self._server))
