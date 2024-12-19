@@ -76,3 +76,22 @@ def test_receive_response_msg(connected_server):
   assert retval == 0 
   responsemsg = connected_server.receive_response_message()
   assert responsemsg == b'hello steven from processor 1\n\x00'
+
+  #testing with a larger message 
+  send_msg = "a"*800
+  expected_res = f"hello {send_msg} from processor 0\n\x00".encode('ascii')
+
+  send_msg = "a"*800 + "\0"
+  retval = connected_server.send_request(send_hdlr, 0, send_msg.encode('ascii'))
+  assert retval == 0 
+  responsemsg = connected_server.receive_response_message()
+  assert responsemsg == expected_res 
+
+  #testing with an invalid PE 
+  try:
+    retval = connected_server.send_request(send_hdlr, 10000, "invalid message\0".encode('ascii'))
+    assert retval != 0 
+  except Exception as e:
+    print(f"Excepted error for invalid PE: {e}")
+
+  
