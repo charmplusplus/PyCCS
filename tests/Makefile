@@ -1,10 +1,10 @@
 #taken from the charm++ directory
 
-#CHARMDIR= #path to charm++ directory 
-#CHARMC = #path to charmc 
+CHARMDIR= #path to charm++ directory 
+CHARMC = #path to charmc 
 
-CHARMDIR= /Users/stevenqie/software/charm
-CHARMC = /Users/stevenqie/software/charm/netlrts-darwin-arm8/bin/charmc 
+#CHARMDIR= /Users/stevenqie/software/charm
+#CHARMC = /Users/stevenqie/software/charm/netlrts-darwin-arm8/bin/charmc 
 
 all: server
 
