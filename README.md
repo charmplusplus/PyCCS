@@ -18,9 +18,9 @@ Moreover, Charm++ must be built in the following manner for compatibility with P
 
 Complete installation commands follow:
 ```bash
-git clone git@github.com:UIUC-PPL/PyCCS.git
+git clone https://github.com/UIUC-PPL/pyccs
 cd PyCCS
-git clone git@github.com:UIUC-PPL/charm.git charm_src/charm
+git clone https://github.com/UIUC-PPL/charm charm_src/charm
 cd charm_src/charm
 ./buildold converse netlrts-linux-x86_64 --with-production -j3 --force --build-shared
 cd ../..

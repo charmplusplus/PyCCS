@@ -41,17 +41,34 @@ def _find_library() -> str:
     import sys
     import platform
 
-    local_dir = os.path.join(sys.prefix, 'lib')
     this_system = platform.system().lower()
-    try:
-        if this_system == "darwin":
-            lib_path = os.path.join(local_dir, 'libccs-client.dylib')
-        else:
-            lib_path = os.path.join(local_dir, 'libccs-client.so')
-        assert os.path.exists(lib_path)
-        return lib_path
-    except:
-        raise
+
+    # regular case 
+    system_lib_dir = os.path.join(sys.prefix, 'lib')
+    if this_system == "darwin":
+        system_lib_path = os.path.join(system_lib_dir, 'libccs-client.dylib')
+    else:
+        system_lib_path = os.path.join(system_lib_dir, 'libccs-client.so')
+
+    if os.path.exists(system_lib_path):
+        return system_lib_path
+
+    # other case user base directory (~/.local/lib/)
+    user_lib_dir = os.path.join(os.path.expanduser("~"), '.local', 'lib')
+    if this_system == "darwin":
+        user_lib_path = os.path.join(user_lib_dir, 'libccs-client.dylib')
+    else:
+        user_lib_path = os.path.join(user_lib_dir, 'libccs-client.so')
+
+    if os.path.exists(user_lib_path):
+        return user_lib_path
+
+    raise FileNotFoundError(
+        f"Library not found. Checked locations:\n"
+        f"  1. {system_lib_path}\n"
+        f"  2. {user_lib_path}\n"
+        f"Ensure libccs-client.so is installed in one of these locations."
+    )
 
 @dataclass
 class ConnectionInfo:
