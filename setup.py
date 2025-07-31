@@ -16,16 +16,17 @@ system = get_build_os()
 if system == "darwin":
     try:
         assert os.path.exists('charm_src/charm/lib_so/libccs-client.dylib')
+        lib_ext = '.dylib'
     except AssertionError:
         print("ERROR: Library file 'charm_src/charm/lib_so/libccs-client.dylib' not found!")
         raise
 else:
     try:
         assert os.path.exists('charm_src/charm/lib_so/libccs-client.so')
+        lib_ext = '.so'
     except AssertionError:
         print("ERROR: Library file 'charm_src/charm/lib_so/libccs-client.so' not found!")
         raise
-
 
 setup(
     name="PyCCS",
@@ -50,5 +51,5 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    data_files=[('lib', ['charm_src/charm/lib_so/libccs-client.dylib'])]
+    data_files=[('lib', [f'charm_src/charm/lib_so/libccs-client{lib_ext}'])]
 )
